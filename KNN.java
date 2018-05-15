@@ -205,11 +205,9 @@ public class KNN {
 				
 				Scanner s = new Scanner(line);
 				
-				// scans each binary feature if there is a line with values
-				while(s.hasNext()) {
-					TrainSet.add(new iris(Double.parseDouble(s.next()), Double.parseDouble(s.next()), 
-							Double.parseDouble(s.next()), Double.parseDouble(s.next()), s.next()));
-				}
+				// create an instance of iris if there is a line
+				TrainSet.add(new iris(Double.parseDouble(s.next()), Double.parseDouble(s.next()), 
+						Double.parseDouble(s.next()), Double.parseDouble(s.next()), s.next()));
 				
 				s.close();
 			}
@@ -231,11 +229,10 @@ public class KNN {
 				String line = sc.nextLine();
 				Scanner s = new Scanner(line);
 				
-				// scans each binary feature if there is a line with values
-				while(s.hasNext()) {
-					TestSet.add(new iris(Double.parseDouble(s.next()), Double.parseDouble(s.next()), 
-							Double.parseDouble(s.next()), Double.parseDouble(s.next()), s.next()));
-				}
+				// create an instance of iris if there is a line
+				TestSet.add(new iris(Double.parseDouble(s.next()), Double.parseDouble(s.next()), 
+						Double.parseDouble(s.next()), Double.parseDouble(s.next()), s.next()));
+				
 				s.close();
 			}
 			sc.close();
