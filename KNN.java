@@ -1,12 +1,10 @@
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import java.io.BufferedReader;
 import java.lang.Math;
 
 public class KNN {
@@ -20,58 +18,10 @@ public class KNN {
 	KNN() {
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		// the arguments that must be provided are the training set and test set respectively
-		BufferedReader readerTraining = null;
-		BufferedReader readerTest = null;
-		Scanner sc = null;
-		
-		try {
-			File f1 = new File(args[0]);
-			File f2 = new File(args[1]);
-			readerTraining = new BufferedReader(new FileReader(f1));
-			readerTest = new BufferedReader(new FileReader(f2));
-			
-			String lineTrain;
-			String lineArrayTrain[] = new String[1];
-			
-			// while there are still lines to be read in file
-			while ((lineTrain = readerTraining.readLine()) != null) {
-				lineArrayTrain = lineTrain.split("\n");
-				sc = new Scanner(lineArrayTrain[0]);
-				
-				while(sc.hasNext()) {
-					double sepalLen = Double.parseDouble(sc.next());
-					double sepalWid = Double.parseDouble(sc.next());
-					double petalLen = Double.parseDouble(sc.next());
-					double petalWid = Double.parseDouble(sc.next());
-					String type = sc.next();
-					TrainSet.add(new iris(sepalLen, sepalWid, petalLen, petalWid, type));
-				}		
-			}
-			
-			String lineTest;
-			String lineArrayTest[] = new String[1];
-			
-			// while there are still lines to be read in file
-			while ((lineTest = readerTest.readLine()) != null) {
-				lineArrayTest = lineTest.split("\n");
-				sc = new Scanner(lineArrayTest[0]);
-				
-				while(sc.hasNext()) {
-					double sepalLen = Double.parseDouble(sc.next());
-					double sepalWid = Double.parseDouble(sc.next());
-					double petalLen = Double.parseDouble(sc.next());
-					double petalWid = Double.parseDouble(sc.next());
-					String label = sc.next();
-					TestSet.add(new iris(sepalLen, sepalWid, petalLen, petalWid, label));
-				}	
-			}
-			
-			sc.close();
-		} catch (IOException e) {
-			System.out.println("invalid file");
-		}
+		readTrainingData(args[0]);
+		readTestData(args[1]);
 		
 		classifiedTest = computeKNN(k, TrainSet, TestSet);
 		
@@ -243,6 +193,57 @@ public class KNN {
 			}
 		}
 		return max - min;
+	}
+	
+	public static void readTrainingData(String str) throws FileNotFoundException {
+		File f = new File(str);
+		try {
+			Scanner sc = new Scanner(f);
+			// scans each line
+			while(sc.hasNextLine()) {
+				String line = sc.nextLine();
+				
+				Scanner s = new Scanner(line);
+				
+				// scans each binary feature if there is a line with values
+				while(s.hasNext()) {
+					TrainSet.add(new iris(Double.parseDouble(s.next()), Double.parseDouble(s.next()), 
+							Double.parseDouble(s.next()), Double.parseDouble(s.next()), s.next()));
+				}
+				
+				s.close();
+			}
+			
+			sc.close();
+		}
+		
+		catch(FileNotFoundException e) {
+			throw new FileNotFoundException();
+		}
+	}
+	
+	public static void readTestData(String str) throws FileNotFoundException {
+		File f = new File(str);
+		try {
+			Scanner sc = new Scanner(f);
+			// scans each line
+			while(sc.hasNextLine()) {
+				String line = sc.nextLine();
+				Scanner s = new Scanner(line);
+				
+				// scans each binary feature if there is a line with values
+				while(s.hasNext()) {
+					TestSet.add(new iris(Double.parseDouble(s.next()), Double.parseDouble(s.next()), 
+							Double.parseDouble(s.next()), Double.parseDouble(s.next()), s.next()));
+				}
+				s.close();
+			}
+			sc.close();
+		}
+		
+		catch(FileNotFoundException e) {
+			throw new FileNotFoundException();
+		}
 	}
 }
 	
